@@ -16,7 +16,6 @@ void binary_tree_print(const binary_tree_t *root)
 	for (; ptr <= que;)
 	{
 		printf("%i\n", (*ptr)->n);
-		fflush(stdout);
 		if ((*ptr)->left != NULL)
 		{
 			que++;
