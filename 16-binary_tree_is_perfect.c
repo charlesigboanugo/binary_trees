@@ -2,75 +2,74 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_is_full - counts the leaves in a binary tree
+ * binary_tree_leaves - counts the leaves in a binary tree
  * @tree: parent node
  *
  * Return: returns the number of leave nodes
  */
-int binary_tree_is_full(const binary_tree_t *tree)
+size_t binary_tree_leaves(const binary_tree_t *tree)
 {
-	int left;
-	int right;
-
 	if (tree == NULL)
 		return (0);
-
 	if (tree->left == NULL && tree->right == NULL)
 		return (1);
-	else if (tree->left != NULL && tree->right != NULL)
+	return (binary_tree_leaves(tree->left) + binary_tree_leaves(tree->right));
+}
+
+/**
+ * binary_tree_height_recur - counts the leaves in a binary tree
+ * @tree: parent node
+ * @height: parent node
+ *
+ * Return: returns the number of leave nodes
+ */
+size_t binary_tree_height_recur(const binary_tree_t *tree, size_t height)
+{
+	size_t left;
+	size_t right;
+
+	if (tree == NULL)
+		return (height);
+	height++;
+	left = binary_tree_height_recur(tree->left, height);
+	right = binary_tree_height_recur(tree->right, height);
+	if (left > right)
+		return (left);
+	else
+		return (right);
+}
+/**
+ * binary_tree_height - counts the leaves in a binary tree
+ * @tree: parent node
+ *
+ * Return: returns the number of leave nodes
+ */
+size_t binary_tree_height(const binary_tree_t *tree)
+{
+	if (tree == NULL)
+		return (0);
+	return (binary_tree_height_recur(tree, 0) - 1);
+}
+
+
+/**
+ * powerof - return
+ * @base: h
+ * @exp: h
+ *
+ * Return: returns the number of leave nodes
+ */
+size_t powerof(size_t base, size_t exp)
+{
+	size_t result = 1;
+
+	while (exp > 0)
 	{
-		left = binary_tree_is_full(tree->left);
-		right = binary_tree_is_full(tree->right);
+		result *= base;
+		exp--;
 	}
-	else
-		return (0);
 
-	if (left && right)
-		return (1);
-	else
-		return (0);
-}
-
-/**
- * dept_deepest_leaf - counts the leaves in a binary tree
- * @tree: parent node
- * @dept: dept of tree
- *
- * Return: returns the number of leave nodes
- */
-ssize_t dept_deepest_leaf(const binary_tree_t *tree, ssize_t dept)
-{
-	ssize_t left_d;
-	ssize_t right_d;
-
-	if (tree == NULL)
-		return (dept);
-	dept++;
-	left_d = dept_deepest_leaf(tree->left, dept);
-	right_d = dept_deepest_leaf(tree->right, dept);
-	if (left_d > right_d)
-		return (left_d);
-	else
-		return (right_d);
-}
-
-/**
- * binary_tree_balance - counts the leaves in a binary tree
- * @tree: parent node
- *
- * Return: returns the number of leave nodes
- */
-int binary_tree_balance(const binary_tree_t *tree)
-{
-	size_t dept_deepest_l;
-	size_t dept_deepest_r;
-
-	if (tree == NULL)
-		return (0);
-	dept_deepest_l = dept_deepest_leaf(tree->left, -1) + 1;
-	dept_deepest_r = dept_deepest_leaf(tree->right, -1) + 1;
-
-	return (dept_deepest_l - dept_deepest_r);
+	return (result);
 }
 
 /**
@@ -81,15 +80,16 @@ int binary_tree_balance(const binary_tree_t *tree)
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	int balance_factor;
-	int full;
+	size_t tree_height;
+	size_t no_of_leaves;
 
 	if (!tree)
 		return (0);
 
-	balance_factor = binary_tree_balance(tree);
-	full = binary_tree_is_full(tree);
-	if (balance_factor == 0 && full == 1)
+	tree_height = binary_tree_height(tree);
+	no_of_leaves = binary_tree_leaves(tree);
+
+	if (powerof(2, tree_height) == no_of_leaves)
 		return (1);
 	else
 		return (0);

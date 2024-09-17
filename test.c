@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "binary_trees.h"
 
+/* Our own functions */
 
 /**
  * main - Entry point
@@ -24,8 +25,8 @@ int main(void)
 	root->right->right->right = binary_tree_node(root->right->right, 120);
 	root->right->left->left = binary_tree_node(root->right->left, 75);
 	root->right->left->right = binary_tree_node(root->right->left, 85);
-	root->left->right->left = binary_tree_node(root->left->right, 55);
-	/*root->left->right->right = _binary_tree_node(root->left->right, 65);*/
+	/*root->left->right->left = binary_tree_node(root->left->right, 55);*/
+	/*root->left->right->right = binary_tree_node(root->left->right, 65);*/
 	root->left->left->left = binary_tree_node(root->left->left, 35);
 	root->left->left->right = binary_tree_node(root->left->left, 45);
 
