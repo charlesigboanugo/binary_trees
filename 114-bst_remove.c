@@ -43,10 +43,14 @@ bst_t *bst_remove(bst_t *root, int value)
 	else
 	{
 		successor = node->right;
-		while (successor->left)
+		for (parent = node; successor->left; parent = successor)
 			successor = successor->left;
 		node->n = successor->n;
-		node->right = bst_remove(node->right, successor->n);
+		if (parent->left == successor)
+			parent->left = succsessor->right;
+		else
+			parent->right = successsor->right;
+		free(successor);
 	}
 	return (root);
 }
