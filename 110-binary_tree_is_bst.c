@@ -29,5 +29,7 @@ int bst_helper(const binary_tree_t *tree, long min, long max)
  */
 int binary_tree_is_bst(const binary_tree_t *tree)
 {
+	if (!tree)
+		return (0);
 	return (bst_helper(tree, LONG_MIN, LONG_MAX));
 }
