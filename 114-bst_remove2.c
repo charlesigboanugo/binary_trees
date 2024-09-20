@@ -28,14 +28,16 @@ bst_t *bst_remove(bst_t *root, int value)
 	}
 	else if (!node->left || !node->right)
 	{
-		temp = node->left ? node->left : node->right;
+		if (node->left)
+			temp = node->left;
+		else
+			temp = node->right;
 		if (node == root)
 			root = temp;
 		else if (parent->left == node)
 			parent->left = temp;
 		else
 			parent->right = temp;
-		temp->parent = parent;
 		free(node);
 	}
 	else
@@ -44,10 +46,12 @@ bst_t *bst_remove(bst_t *root, int value)
 		for (parent = node; successor->left; parent = successor)
 			successor = successor->left;
 		node->n = successor->n;
-		parent->left = successor->right;
-		if (successor->right)
-			successor->right->parent = parent;
+		if (parent->left == successor)
+			parent->left = succsessor->right;
+		else
+			parent->right = successsor->right;
 		free(successor);
 	}
 	return (root);
 }
+
