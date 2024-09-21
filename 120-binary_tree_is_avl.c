@@ -2,7 +2,7 @@
 #include <limits.h>
 #include "binary_trees.h"
 
-int check_avl(const binary_tree_t *tree, int *height);
+int check_avl(const binary_tree_t *tree, int *height, int low, int high);
 
 /**
  * binary_tree_is_avl - Checks if a binary tree is a valid AVL tree.
