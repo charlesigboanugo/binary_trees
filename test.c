@@ -1,43 +1,113 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include "binary_trees.h"
 
+
 /**
- * main - Entry point
+ * avl_balance_node - balances an unbalanced node
+ * @node: Pointer to the node to balance.
  *
- * Return: Always 0 (Success)
+ * Return: pointer to the balanced node
  */
-int main(void)
+avl_t *avl_balance_node(avl_t *node)
 {
-	binary_tree_t *root;
-	binary_tree_t *first, *second;
-	binary_tree_t *ancestor;
+	int balance;
 
-	root = binary_tree_node(NULL, 70);
-	root->left = binary_tree_node(root, 50);
-	root->right = binary_tree_node(root, 90);
-	root->left->left = binary_tree_node(root->left, 40);
-	root->left->right = binary_tree_node(root->left, 60);
-	root->right->left = binary_tree_node(root->right, 80);
-	root->right->right = binary_tree_node(root->right, 110);
-	root->right->right->left = binary_tree_node(root->right->right, 105);
-	root->right->right->right = binary_tree_node(root->right->right, 120);
-	root->right->left->left = binary_tree_node(root->right->left, 75);
-	root->right->left->right = binary_tree_node(root->right->left, 85);
-	root->left->right->left = binary_tree_node(root->left->right, 55);
-	root->left->right->right = binary_tree_node(root->left->right, 65);
-	root->left->left->left = binary_tree_node(root->left->left, 35);
-	root->left->left->right = binary_tree_node(root->left->left, 45);
+	balance = binary_tree_balance(node);
+	if (balance > 1 && value < node->left)
+		node = binary_tree_rotate_right(node);
+	if (balance > 1 && value > node->left)
+	{
+		node->left = binary_tree_rotate_left(node->left);
+		node = binary_tree_rotate_right(node);
+	}
+	if (balance < -1 && value > node->left)
+		node = binary_tree_rotate_left(node);
+	if (balance < -1 && value < node->left)
+	{
+		node->right = binary_tree_rotate_right(node->right);
+		node = binary_tree_rotate_left(node);
+	}
+	return (node);
+}
 
-	first = root->left;
-	second = root->left;
-	ancestor = binary_trees_ancestor(first, second);
-	printf("Lowest common ancestor of (%d) and (%d) is: ", first->n, second->n);
-	if (ancestor)
-		printf("%d\n", ancestor->n);
+/**
+ * avl_remove_node_with_2_child - Removes a node that has two children from an
+ * AVL tree without actually deleting the node (by swapping values)
+ * @node: Pointer to the node to remove
+ * @successor: successor to node
+ *
+ * Return: new successor to node
+ */
+avl_t *avl_remove_node_with_2_child(avl_t *node, bst_t *successor)
+{
+	bst_t *temp = NULL;
+
+	if (!successor->left)
+	{
+		node->n = successor->n;
+		temp = successor->right;
+		if (temp)
+			temp->parent = successor->parent;
+		free(successor)
+		return (temp)
+	}
+	successor->left = avl_remove_node_with_2_child(node, successor->left);
+	successor = avl_balance_node(successor);
+	return (successor);
+}
+
+/**
+ * avl_remove_recursion - Removes a node from an AVL Tree.
+ * @node: Pointer to the root node of the tree.
+ * @value: The value to remove from the tree.
+ * @value_found: indicates whether a node is removed.
+ *
+ * Return: Pointer to the new root node of the tree after removal.
+ */
+avl_t *avl_remove_recursion(bst_t *node, int value, int *value_found)
+{
+	bst_t *temp = node;
+
+	if (!node)
+		return (node);
+	if (value > node->n)
+		node->right = avl_remove_recursion(node->right, value);
+	else if (value < node->n)
+		node->left = avl_remove_recursion(node->left, value);
 	else
-		printf("%p\n", (void *)ancestor);
+	{
+		*value_found = 1;
+		if (!node->left && !node->right)
+		{
+			node = NULL;
+			free(temp);
+		}
+		else if (!node->left || !node->right)
+		{
+			node = node->left ? node->left : node->right;
+			node->parent = temp->parent;
+			free(temp);
+		}
+		else
+			node->right = avl_remove_node_with_2_child(node, node->right);
+	}
+	if (value_found)
+		node = avl_balance_node(node);
+	return (node);
+}
 
-	binary_tree_print(root);
-	return (0);
+/**
+ * avl_remove - wrapper for avl_remove_recursion.
+ * @root: Pointer to the root node of the tree.
+ * @value: The value to remove from the tree.
+ *
+ * Return: Pointer to the new root node of the tree after removal.
+ */
+avl_t *avl_remove(bst_t *root, int value)
+{
+	int value_found = 0;
+
+	if (!node)
+		return (NULL);
+	return (avl_remove_recursion(root, value, &value_found));
 }
