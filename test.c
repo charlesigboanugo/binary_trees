@@ -3,30 +3,25 @@
 
 
 /**
- * avl_balance_node - balances an unbalanced node
+ * avl_balance_node_removal - balances an unbalanced node after node removal
  * @node: Pointer to the node to balance.
+ * @value: value removed from tree
  *
  * Return: pointer to the balanced node
  */
-avl_t *avl_balance_node(avl_t *node)
+avl_t *avl_balance_node_removal(avl_t *node, int value)
 {
 	int balance;
 
 	balance = binary_tree_balance(node);
-	if (balance > 1 && value < node->left)
+	if (balance > 1 && value > node->right->n)
 		node = binary_tree_rotate_right(node);
-	if (balance > 1 && value > node->left)
-	{
-		node->left = binary_tree_rotate_left(node->left);
-		node = binary_tree_rotate_right(node);
-	}
-	if (balance < -1 && value > node->left)
-		node = binary_tree_rotate_left(node);
-	if (balance < -1 && value < node->left)
-	{
+	else if (balance > 1 && value < node->right->n)
 		node->right = binary_tree_rotate_right(node->right);
+	else if (balance < -1 && value < node->left->n)
 		node = binary_tree_rotate_left(node);
-	}
+	else if (balance < -1 && value > node->left->n)
+		node->left = binary_tree_rotate_left(node->left);
 	return (node);
 }
 
@@ -41,10 +36,12 @@ avl_t *avl_balance_node(avl_t *node)
 avl_t *avl_remove_node_with_2_child(avl_t *node, bst_t *successor)
 {
 	bst_t *temp = NULL;
+	int value;
 
 	if (!successor->left)
 	{
 		node->n = successor->n;
+		value = successor->n;
 		temp = successor->right;
 		if (temp)
 			temp->parent = successor->parent;
@@ -52,7 +49,7 @@ avl_t *avl_remove_node_with_2_child(avl_t *node, bst_t *successor)
 		return (temp)
 	}
 	successor->left = avl_remove_node_with_2_child(node, successor->left);
-	successor = avl_balance_node(successor);
+	successor = avl_balance_node_removal(successor, value);
 	return (successor);
 }
 
@@ -89,10 +86,13 @@ avl_t *avl_remove_recursion(bst_t *node, int value, int *value_found)
 			free(temp);
 		}
 		else
-			node->right = avl_remove_node_with_2_child(node, node->right);
+		{
+			temp = avl_remove_node_with_2_child(node, node->right);
+			node->right = temp;
+		}
 	}
 	if (value_found)
-		node = avl_balance_node(node);
+		node = avl_balance_node_removal(node, value);
 	return (node);
 }
 
