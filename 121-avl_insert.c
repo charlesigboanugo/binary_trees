@@ -1,6 +1,38 @@
 #include <stdlib.h>
 #include "binary_trees.h"
 
+
+/**
+ * avl_balance_node_insertion - balances an unbalanced node after node
+ * insertion
+ * @node: Pointer to the node to balance.
+ * @value: value inserted into the tree
+ *
+ * Return: pointer to the balanced node
+ */
+avl_t *avl_balance_node_insertion(avl_t *node, int value)
+{
+	int balance;
+
+	balance = binary_tree_balance(node);
+
+	if (balance > 1 && value < node->left->n)
+		node = binary_tree_rotate_right(node);
+	else if (balance < -1 && value > node->right->n)
+		node = binary_tree_rotate_left(node);
+	else if (balance > 1 && value > node->left->n)
+	{
+		node->left = binary_tree_rotate_left(node->left);
+		node = binary_tree_rotate_right(node);
+	}
+	else if (balance < -1 && value < node->right->n)
+	{
+		node->right = binary_tree_rotate_right(node->right);
+		node = binary_tree_rotate_left(node);
+	}
+	return (node);
+}
+
 /**
  * avl_insert - Inserts a value into an AVL Tree.
  * @tree: Double pointer to the root node of the AVL tree.
@@ -38,21 +70,7 @@ avl_t *avl_insert(avl_t **tree, int value)
 		return (NULL);
 
 	/* Balance the tree after insertion */
-	balance = binary_tree_balance(*tree);
+	*tree = avl_balance_node_insertion(*tree, value);
 
-	if (balance > 1 && value < (*tree)->left->n)
-		*tree = binary_tree_rotate_right(*tree);
-	else if (balance < -1 && value > (*tree)->right->n)
-		*tree = binary_tree_rotate_left(*tree);
-	else if (balance > 1 && value > (*tree)->left->n)
-	{
-		(*tree)->left = binary_tree_rotate_left((*tree)->left);
-		*tree = binary_tree_rotate_right(*tree);
-	}
-	else if (balance < -1 && value < (*tree)->right->n)
-	{
-		(*tree)->right = binary_tree_rotate_right((*tree)->right);
-		*tree = binary_tree_rotate_left(*tree);
-	}
 	return (new_node);
 }

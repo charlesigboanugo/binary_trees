@@ -17,11 +17,17 @@ avl_t *avl_balance_node_removal(avl_t *node, int value)
 	if (balance > 1 && value > node->right->n)
 		node = binary_tree_rotate_right(node);
 	else if (balance > 1 && value < node->right->n)
-		node->right = binary_tree_rotate_right(node->right);
+	{
+		node->right = binary_tree_rotate_left(node->right);
+		node = binary_tree_rotate_right(node);
+	}
 	else if (balance < -1 && value < node->left->n)
 		node = binary_tree_rotate_left(node);
 	else if (balance < -1 && value > node->left->n)
-		node->left = binary_tree_rotate_left(node->left);
+	{
+		node->left = binary_tree_rotate_right(node->left);
+		node = binary_tree_rotate_left(node);
+	}
 	return (node);
 }
 
