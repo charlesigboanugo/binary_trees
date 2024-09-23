@@ -2,29 +2,38 @@
 #include "binary_trees.h"
 
 /**
- * sorted_array_to_avl_recur - builds an AVL tree from a sorted array
- * @array: pointer to the first element of the array
+ * sorted_arr_to_avl_recur - builds an AVL tree from a sorted array
+ * @arr: pointer to the first element of the array
  * @parent: pointer to the parent node
  * @i: index of first element of array
  * @j: index of last element of array
  *
  * Return: root of the created AVL tree
  */
-avl_t *sorted_array_to_avl_recur(int *array, avl_t *parent, size_t i, size_t j)
+avl_t *sorted_arr_to_avl_recur(int *arr, avl_t *parent, size_t i, size_t j)
 {
-	avl_t *node;
+	avl_t *node = NULL;
 	size_t index;
 
 	index = (i + j) / 2;
 
-	node = binary_tree_node(parent, array[index]);
+	node = binary_tree_node(parent, arr[index]);
 
 	/* An error occured within binary_tree_node */
 	if (!node)
-		exit (EXIT_FAILURE);
+		return (NULL);
 
-	node->left = sorted_array_to_avl_recur(array, node, i, index - 1);
-	node->right = sorted_array_to_avl_recur(array, node, index + 1, j);
+	if (i < index)
+		node->left = sorted_arr_to_avl_recur(arr, node, i, index - 1);
+
+	if (j > index)
+		node->right = sorted_arr_to_avl_recur(arr, node, index + 1, j);
+
+	if ((i < index && !node->left) || (j > index && !node->right))
+	{
+		binary_tree_delete(node);
+		node = NULL;
+	}
 
 	return (node);
 }
@@ -38,12 +47,14 @@ avl_t *sorted_array_to_avl_recur(int *array, avl_t *parent, size_t i, size_t j)
  */
 avl_t *sorted_array_to_avl(int *array, size_t size)
 {
-	avl_t *root;
+	avl_t *root = NULL;
 
 	if (!array || size == 0)
 		return (NULL);
 
-	root = sorted_array_to_avl_recur(array, NULL, 0, size - 1);
+	root = sorted_arr_to_avl_recur(array, NULL, 0, size - 1);
+	if (!root)
+		return (NULL);
 
 	return (root);
 }
