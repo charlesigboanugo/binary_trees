@@ -15,9 +15,6 @@ avl_t *sorted_array_to_avl_recur(int *array, avl_t *parent, size_t i, size_t j)
 	avl_t *node;
 	size_t index;
 
-	if (i > j)
-		return (NULL);
-
 	index = (i + j) / 2;
 
 	node = binary_tree_node(parent, array[index]);
@@ -26,11 +23,9 @@ avl_t *sorted_array_to_avl_recur(int *array, avl_t *parent, size_t i, size_t j)
 	if (!node)
 		exit (EXIT_FAILURE);
 
-	if (i <= j)
-	{
-		node->left = sorted_array_to_avl_recur(array, node, i, index - 1);
-		node->right = sorted_array_to_avl_recur(array, node, index + 1, j);
-	}
+	node->left = sorted_array_to_avl_recur(array, node, i, index - 1);
+	node->right = sorted_array_to_avl_recur(array, node, index + 1, j);
+
 	return (node);
 }
 
