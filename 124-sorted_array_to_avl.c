@@ -19,21 +19,11 @@ avl_t *sorted_arr_to_avl_recur(int *arr, avl_t *parent, size_t i, size_t j)
 
 	node = binary_tree_node(parent, arr[index]);
 
-	/* An error occured within binary_tree_node */
-	if (!node)
-		return (NULL);
-
 	if (i < index)
 		node->left = sorted_arr_to_avl_recur(arr, node, i, index - 1);
 
 	if (j > index)
 		node->right = sorted_arr_to_avl_recur(arr, node, index + 1, j);
-
-	if ((i < index && !node->left) || (j > index && !node->right))
-	{
-		binary_tree_delete(node);
-		node = NULL;
-	}
 
 	return (node);
 }
