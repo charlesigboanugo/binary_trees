@@ -32,6 +32,7 @@ heap_t *heapify_up(heap_t *node)
 heap_t *heap_insert_helper(heap_t *root, int value)
 {
 	heap_t *new_node = NULL;
+	heap_t *current = NULL;
 	heap_t *queue[1024];
 	int front = 0, rear = 0;
 
@@ -39,7 +40,7 @@ heap_t *heap_insert_helper(heap_t *root, int value)
 	queue[rear++] = root;
 	while (front < rear)
 	{
-		heap_t *current = queue[front++];
+		current = queue[front++];
 
 		if (!current->left)
 		{
@@ -63,6 +64,7 @@ heap_t *heap_insert_helper(heap_t *root, int value)
 		else
 			queue[rear++] = current->right;
 	}
+	return (NULL);
 }
 
 /**
