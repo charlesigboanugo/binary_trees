@@ -36,10 +36,8 @@ int *heap_to_sorted_array(heap_t *heap, size_t *size)
 	if (!array)
 		return (NULL);
 
-	for (index = *size; index > 0; index--)
-	{
-		array[index - 1] = heap_extract(&heap);
-	}
+	for (index = 0; index < *size; index++)
+		array[index] = heap_extract(&heap);
 
 	return (array);
 }
