@@ -31,7 +31,7 @@ heap_t *heapify_up(heap_t *node)
  */
 heap_t *heap_insert_helper(heap_t *root, int value)
 {
-	heap_t *new_node;
+	heap_t *new_node = NULL;
 	heap_t *queue[1024];
 	int front = 0, rear = 0;
 
@@ -43,21 +43,26 @@ heap_t *heap_insert_helper(heap_t *root, int value)
 
 		if (!current->left)
 		{
-			current->left = binary_tree_node(current, value);
-			return (current->left);
+			new_node = binary_tree_node(current, value);
+			if (!new_node)
+				return (NULL);
+			current->left = new_node;
+			return (new_node);
 		}
 		else
 			queue[rear++] = current->left;
 
 		if (!current->right)
 		{
-			current->right = binary_tree_node(current, value);
-			return (current->right);
+			new_node = binary_tree_node(current, value);
+			if (!new_node)
+				return (NULL);
+			current->right = new_node;
+			return (new_node);
 		}
 		else
 			queue[rear++] = current->right;
 	}
-	return (NULL);
 }
 
 /**
